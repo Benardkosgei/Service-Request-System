@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services - Serve Request System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Ensures the footer is at the bottom */
+        html {
+            height: -webkit-fill-available;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+
+            font-family: "Inter", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: <weight>;
+            font-style: normal;
+            font-variation-settings:
+              "slnt" 0;
+	    -webkit-font-smoothing: antialiased;
+        }
+        main {
+            flex: 1;
+        }
+        /* Card hover effect */
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        /* Text-border */
+        .text-outline {
+            -webkit-text-stroke: 1px white;
+        }
+    </style>
+</head>
+<body style="background-image: url('assets/images/services_background.webp'); background-position: center;">
+
+<header class="text-blue-600 p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-3xl"><strong class="text-blue-500">Serve Request System</strong></h1>
+        <nav>
+            <ul class="flex space-x-4 font-semibold text-xl">
+                <li><a href="/" class="hover:text-blue-800">Home</a></li>
+                <li><a href="/about" class="hover:text-blue-800">About</a></li>
+                <li><a href="/services" class="hover:text-blue-800">Services</a></li>
+                <li><a href="/contact" class="hover:text-blue-800">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="fixed top-10 right-10 ml-3 rounded-lg mt-3 border-l-4 p-4 alert z-50 
+                {% if category == 'info' %} bg-blue-100 border-blue-600 text-blue-800 
+                {% elif category == 'error' %} bg-red-100 border-red-600 text-red-800 
+                {% elif category == 'warning' %} bg-yellow-100 border-yellow-600 text-yellow-800 
+                {% elif category == 'success' %} bg-green-100 border-green-600 text-green-800 
+                {% endif %}" role="alert">
+                {{ message }}
+                <div type="button" class="close absolute right-1 top-1 cursor-pointer" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true" class="text-gray-800 font-bold cursor-pointer" onclick="this.parentElement.parentElement.style.display='none';">&times;</span>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<main class="container mx-auto my-8 flex-grow">
+    <section class="bg-blue-200/50 rounded-2xl text-center p-8">
+        <h2 class="text-5xl font-bold mb-8">Our <strong class="text-6xl text-blue-700 text-outline">Services</strong></h2>
+        <p class="text-xl font-bold mb-12">Currently, we have service providers for your home and small business needs in the following categories.</p>
+        <a href="/roles" class="bg-blue-500 hover:bg-blue-700 text-white text-xl font-bold py-3 px-4 rounded-lg">Raise request now</a>
+    </section>
+
+    <section class="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+
+	{% for category, info in service_categories.items() %}
+        <div class="p-4 bg-blue-500/90 rounded-lg shadow card transition-all duration-300 hover:bg-blue-600">
+            <i class="fa-solid fa-{{ info[1] }} fa-2x" aria-hidden="true"></i>
+            <h3 class="inline-block text-xl text-blue-1200 font-bold ml-4 mb-2">{{ category }}</h3>
+            <p class="bg-blue-300/75 rounded-lg shadow-lg p-2 hover:bg-blue-400">{{ info[0] }}</p>
+        </div>
+        {% endfor %}
+
+    </section>
+</main>
+
+<footer class="text-blue-800 text-center p-2 hover:text-blue-600">
+    <p>&copy; 2024 Serve Request System. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

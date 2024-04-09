@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Update Confirmation</title>
+</head>
+<body>
+    <h2>Profile Update Confirmation</h2>
+    <p>Dear {{ new_customer.name }},</p>
+    <p>Your profile has been successfully updated. Here are the details:</p>
+    <table>
+        <tr>
+            <td><strong>Old Name:</strong></td>
+            <td>{{ old_customer.name }}</td>
+        </tr>
+        <tr>
+            <td><strong>New Name:</strong></td>
+            <td>{{ new_customer.name }}</td>
+        </tr>
+        <tr>
+            <td><strong>Old Email:</strong></td>
+            <td>{{ old_customer.email }}</td>
+        </tr>
+        <tr>
+            <td><strong>New Email:</strong></td>
+            <td>{{ new_customer.email }}</td>
+        </tr>
+        <tr>
+            <td><strong>Old Phone:</strong></td>
+            <td>{{ old_customer.phone }}</td>
+        </tr>
+        <tr>
+            <td><strong>New Phone:</strong></td>
+            <td>{{ new_customer.phone }}</td>
+        </tr>
+    </table>
+    <p>Thank you for updating your profile with us.</p>
+</body>
+</html>

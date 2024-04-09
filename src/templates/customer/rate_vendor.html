@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" class="min-h-screen flex flex-col">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rate and Comment on Vendor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: "Roboto", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: <weight>;
+            font-style: normal;
+            font-variation-settings:
+              "slnt" 0;
+	    -webkit-font-smoothing: antialiased;
+        }
+        .rating-star {
+            cursor: pointer;
+        }
+        .not-rated {
+            color: grey;
+        }
+        .rated {
+            color: orange;
+        }
+    </style>
+</head>
+<body class="flex-grow" style="background-image: url('/assets/images/customer/rate_vendor_background.webp'); background-position: center;">
+    <div class="container mx-auto p-4 flex flex-col items-center justify-center min-h-screen">
+        <div class="w-full max-w-md">
+            <form id="ratingForm" action="/customer/request/{{request_id}}/rate/{{vendor['_id']}}" method="POST" class="bg-amber-100/90 hover:bg-yellow-100 shadow-md rounded-lg px-8 pt-6 pb-8 mb-4">
+
+                <h1 class="text-2xl font-bold mt-4 mb-4 text-center">Rate and Comment on Vendor</h1>
+
+                <!-- Vendor Details -->
+                <div class="px-10 py-8">
+                    <div class="text-center text-green-500 font-black text-3xl mb-2">{{vendor['name']}}</div>
+                </div>
+
+                <!-- Back Button -->
+                <div class="ml-2 mb-4">
+                    <button id="back-btn" onclick="window.history.back()" class="text-gray-600 bg-gray-100 text-sm font-bold px-4 py-2 rounded shadow hover:text-blue-500 transition-colors duration-300">
+                        ← Go Back
+                    </button>
+                </div>
+
+                <p class="text-md text-purple-500 font-semibold ml-2 mb-3">Contact:</p>
+                <div class="contact-details mx-6 my-4 mb-4 gap-2">
+                    <p class="flex justify-between font-bold items-center gap-4">
+                        Phone
+                        <a href="tel:{{ vendor['phone'].replace('(', '').replace(')', '').replace(' ', '').replace('-', '') }}" class="text-red-500 hover:text-red-700">{{ vendor['phone'] }}</a>
+                    </p>
+                    <p class="flex justify-between font-bold items-center gap-4">
+                        Mail
+                        <a href="mailto:{{ vendor['email'] }}" class="text-blue-500 hover:text-blue-700">{{ vendor['email'] }}</a>
+                    </p>
+                </div>
+
+                <!-- Form Fields -->
+                <input type="hidden" name="rating" value="" id="ratingValue" required>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Your Rating</label>
+                    <div class="flex">
+                        <i class="rating-star far fa-star not-rated" data-rate="1"></i>
+                        <i class="rating-star far fa-star not-rated" data-rate="2"></i>
+                        <i class="rating-star far fa-star not-rated" data-rate="3"></i>
+                        <i class="rating-star far fa-star not-rated" data-rate="4"></i>
+                        <i class="rating-star far fa-star not-rated" data-rate="5"></i>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="comment">Comment</label>
+                    <textarea name="comment" id="comment" rows="4" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Write your comment on vendor (optional)"></textarea>
+                </div>
+                <div class="flex items-center justify-between">
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="bg-blue-500 text-white text-center p-4 mt-auto">
+        <p>&copy; 2024 Serve Request System. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const stars = document.querySelectorAll('.rating-star');
+            const ratingInput = document.getElementById('ratingValue');
+
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    const rating = this.getAttribute('data-rate');
+                    ratingInput.value = rating;
+
+                    stars.forEach(innerStar => {
+                        if(innerStar.getAttribute('data-rate') <= rating) {
+                            innerStar.classList.add('rated');
+                            innerStar.classList.remove('not-rated');
+                        } else {
+                            innerStar.classList.add('not-rated');
+                            innerStar.classList.remove('rated');
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

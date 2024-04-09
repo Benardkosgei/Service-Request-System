@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Serve Request System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Ensures the footer is at the bottom */
+        html {
+            height: -webkit-fill-available;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+
+            font-family: "Inter", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: <weight>;
+            font-style: normal;
+            font-variation-settings:
+              "slnt" 0;
+	    -webkit-font-smoothing: antialiased;
+        }
+        main {
+            flex: 1;
+        }
+        /* Text-border */
+        .text-outline {
+            -webkit-text-stroke: 1px white;
+        }
+    </style>
+</head>
+<body style="background-image: url('assets/images/contact_background.webp'); background-position: center;">
+
+<header class="text-rose-400 p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-3xl"><strong class="text-rose-500">Serve Request System</strong></h1>
+        <nav>
+            <ul class="flex space-x-4 font-semibold text-xl">
+                <li><a href="/" class="hover:text-rose-300">Home</a></li>
+                <li><a href="/about" class="hover:text-rose-300">About</a></li>
+                <li><a href="/services" class="hover:text-rose-300">Services</a></li>
+                <li><a href="/contact" class="hover:text-rose-300">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="fixed top-10 right-10 ml-3 rounded-lg mt-3 border-l-4 p-4 alert z-50 
+                {% if category == 'info' %} bg-blue-100 border-blue-600 text-blue-800 
+                {% elif category == 'error' %} bg-red-100 border-red-600 text-red-800 
+                {% elif category == 'warning' %} bg-yellow-100 border-yellow-600 text-yellow-800 
+                {% elif category == 'success' %} bg-green-100 border-green-600 text-green-800 
+                {% endif %}" role="alert">
+                {{ message }}
+                <div type="button" class="close absolute right-1 top-1 cursor-pointer" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true" class="text-gray-800 font-bold cursor-pointer" onclick="this.parentElement.parentElement.style.display='none';">&times;</span>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<main class="container mx-auto px-4 my-24">
+    <div class="flex flex-wrap justify-center">
+        <div class="w-full md:w-1/2 lg:w-1/3 p-4">
+            <form action="/contact" method="POST" class="bg-rose-700/95 shadow-md rounded-xl px-8 pt-6 pb-8 mb-4 hover:bg-rose-700">
+                <h2 class="text-5xl text-rose-300 font-bold text-center mb-10">Contact Us</h2>
+                <div class="mb-4">
+                    <label class="block text-rose-200 text-md font-bold mb-2" for="name">
+                        Name
+                    </label>
+                    <input class="bg-red-600 shadow appearance-none border-2 border-rose-500 rounded w-full py-2 px-3 text-white placeholder-white leading-tight focus:outline-none focus:shadow-outline" id="name" name="name" type="text" placeholder="Full Name">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-rose-200 text-md font-bold mb-2" for="email">
+                        Email
+                    </label>
+                    <input class="bg-red-600 shadow appearance-none border-2 border-rose-500 rounded w-full py-2 px-3 text-white placeholder-white leading-tight focus:outline-none focus:shadow-outline" id="email" name="email" type="email" placeholder="Email ID">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-rose-200 text-md font-bold mb-2" for="message">
+                        Message
+                    </label>
+                    <textarea class="bg-red-600 shadow appearance-none border-2 border-rose-500 rounded w-full py-2 px-3 text-white placeholder-white mb-3 leading-tight focus:outline-none focus:shadow-outline" id="message" name="message" placeholder="Type your message here"></textarea>
+                </div>
+                <div class="flex items-center justify-between">
+                    <button class="bg-rose-500 hover:bg-rose-400 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                        Send
+                    </button>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="text-white mt-4">
+                    <p class="text-xl text-center">Reach us at</p>
+                    <p class="text-lg ml-24 mt-2">Email: <a class="hover:text-rose-500" href="mailto:contact@srs.com">contact@srs.com</a></p>
+                    <p class="text-lg ml-24">Phone: <a class="hover:text-rose-500" href="tel:+15551234567">+1 (555) 123-4567</a></p>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</main>
+
+<footer class="text-rose-400 text-center p-2 hover:text-rose-300">
+    <p>&copy; 2024 Serve Request System. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

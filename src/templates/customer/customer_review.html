@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" class="flex flex-col min-h-screen">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Reviews - Service Request System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Ensures footer is always at the bottom */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body class="flex flex-col" style="background-image: url('/assets/images/customer/customer_dashboard_background.webp'); background-size: cover; background-position: center;">
+
+<header class="bg-blue-500/75 text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-xl">Customer Reviews</h1>
+        
+        <nav>
+            <ul class="flex space-x-4">
+                <li><a href="/customer/profile" class="font-bold hover:text-red-400">My Profile</a></li>
+                <li><a href="/customer/dashboard" class="font-bold hover:text-red-400">Dashboard</a></li>
+                <li><a href="/customer/history" class="text-yellow-400 font-semibold hover:text-white">View History</a></li>
+                <li><a href="/logout" class="font-bold hover:text-red-400">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main class="flex-grow container mx-auto p-4">
+
+    <!-- Display Reviews -->
+    <div class="bg-white shadow-md rounded p-6">
+        <div class="flex items-center justify-between">
+            <h2 class="text-xl font-semibold mb-4">Recent Reviews</h2>
+            <a href="/customer/create_review" class="bg-green-500 hover:bg-green-700 font-bold py-2 px-4 rounded align-baseline font-bold text-sm text-white  hover:text-white-800">Create Review</a>
+        </div>
+        <div class="">
+            <!-- Loop through reviews and display them here -->
+            {% for review in reviews %}
+                <div class="border-b py-4 shadow-lg p-3">
+                    <h3 class="text-lg font-semibold">{{ review.title }}</h3>
+                    <p class="text-gray-600">{{ review.description }}</p>
+                    <b class="text-gray-600">{{ review.category }}</b>
+                    <br>
+                    <br>
+                    <a href="/customer/review/delete/{{review._id}}" class="bg-red-500 hover:bg-red-700 font-bold py-2 px-4 rounded align-baseline font-bold text-sm text-white hover:text-white-800">Remove Review</a>
+                </div>
+            {% endfor %}
+            <!-- If no reviews available -->
+            {% if not reviews %}
+                <p>No reviews available.</p>
+            {% endif %}
+        </div>
+    </div>
+
+</main>
+
+<footer class="bg-blue-500/75 text-white hover:text-gray-200 text-center p-4 mt-auto">
+    <p>&copy; 2024 Serve Request System. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

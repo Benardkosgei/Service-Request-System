@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en" class="flex flex-col min-h-screen">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History - Serve Request System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Ensures footer is always at the bottom */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        main {
+            flex: 1;
+        }
+        /* Style for the search icon inside the search box */
+        .search-icon {
+            position: absolute;
+            inset-y: 0;
+            right: 0;
+            padding: 16px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col" style="background-image: url('/assets/images/customer/customer_dashboard_background.webp'); background-size: cover; background-position: center;">
+
+<header class="bg-blue-500 text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-xl">Order History</h1>
+        <nav>
+            <ul class="flex space-x-4">
+                <li><a href="/customer/dashboard" class="font-bold hover:text-red-400">Dashboard</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="fixed top-10 right-10 ml-3 rounded-lg mt-3 border-l-4 p-4 alert z-50 
+                {% if category == 'info' %} bg-blue-100 border-blue-600 text-blue-800 
+                {% elif category == 'error' %} bg-red-100 border-red-600 text-red-800 
+                {% elif category == 'warning' %} bg-yellow-100 border-yellow-600 text-yellow-800 
+                {% elif category == 'success' %} bg-green-100 border-green-600 text-green-800 
+                {% endif %}" role="alert">
+                {{ message }}
+                <div type="button" class="close absolute right-1 top-1 cursor-pointer" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true" class="text-gray-800 font-bold cursor-pointer" onclick="this.parentElement.parentElement.style.display='none';">&times;</span>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<main class="flex-grow container mx-auto p-4">
+
+    <!-- Search Bar with Filters -->
+    <div class="flex gap-4 mb-4">
+        <select id="filter-parameter" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <option value="all">All Parameters</option>
+            <option value="title">Request Title</option>
+            <option value="category">Service Categories</option>
+            <option value="date">Service Date</option>
+            <option value="status">Status</option>
+            <option value="phone">Vendor Phone</option>
+            <option value="email">Vendor Email</option>
+            <option value="rating">Rating</option>
+        </select>
+        <div class="relative flex-grow">
+            <input type="text" id="search-input" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Search requests...">
+        </div>
+        <button id="search-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Search
+        </button>
+    </div>
+
+    <!-- Back Button -->
+    <div class="ml-2 mt-6 mb-4">
+        <button id="back-btn" onclick="window.history.back()" class="text-gray-600 bg-gray-100 text-sm font-bold px-4 py-2 rounded shadow hover:text-blue-500 transition-colors duration-300">
+            ← Go Back
+        </button>
+    </div>
+
+    <!-- CRUD Table -->
+    <div class="bg-white shadow-md rounded my-6">
+        <table id="crud-table" class="min-w-full border-collapse">
+            <thead>
+                <tr>
+                    <th class="border-b py-2 px-4 text-left">Request Title</th>
+                    <th class="border-b py-2 px-4 text-left">Service Category</th>
+                    <th class="border-b py-2 px-4 text-left">Service Date</th>
+                    <th class="border-b py-2 px-4 text-left">Status</th>
+                    <th class="border-b py-2 px-4 text-left">Vendor Phone</th>
+                    <th class="border-b py-2 px-4 text-left">Vendor Email</th>
+                    <th class="border-b py-2 px-4 text-left">Rating</th>
+                    <th class="border-b py-2 px-4 text-left">Payment Gateway</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            {% for request in requests %}
+                <tr>
+                    <td class="border-b py-2 px-4 request-title">{{ request['title'] }}</td>
+                    <td class="border-b py-2 px-4 service-category">{{ request['category'] }}</td>
+                    <td class="border-b py-2 px-4 service-date">{{ dt.strptime(request['date'], "%Y-%m-%d").strftime("%d %B, %Y") }}</td>
+                    <td class="border-b py-2 px-4 status">
+                        {% if request['status'].lower() == "open" %}
+                            <span class="text-xs font-bold status py-1 px-2 rounded-full bg-green-200 text-green-800">
+                                {{ request['status'] }}
+                            </span>
+                        {% elif request['status'].lower() == "closed" %}
+                            <span class="text-xs font-bold status py-1 px-2 rounded-full bg-red-200 text-red-800">
+                                {{ request['status'] }}
+                            </span>
+                        {% else %}
+                            <span class="text-xs font-bold status py-1 px-2 rounded-full bg-yellow-200 text-yellow-800">
+                                {{ request['status'] }}
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td class="border-b py-2 px-4 phone">
+                        <a class="text-blue-500 underline" href="tel:{{ request['vendor_phone'].replace('(', '').replace(')', '').replace(' ', '').replace('-', '') }}">{{ request['vendor_phone'] }}</a>
+                    </td>
+                    <td class="border-b py-2 px-4 email">
+                        <a class="text-blue-500 underline" href="mailto:{{ request['vendor_email'] }}">{{ request['vendor_email'] }}</a>
+                    </td>
+                    <td class="border-b py-2 px-4 rating">{{ request['rating'] }}</td>
+                    <td class="border-b py-2 px-4 payment-gateway">{{ request['payment_gateway'] }}</td>
+
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<footer class="bg-blue-500 text-white text-center p-4 mt-auto">
+    <p>&copy; 2024 Serve Request System. All rights reserved.</p>
+</footer>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('search-input');
+    const filterParam = document.getElementById('filter-parameter');
+    const searchBtn = document.getElementById('search-btn');
+    const crudTableRows = document.querySelectorAll('#crud-table tbody tr');
+
+    function filterTable() {
+      const searchText = searchInput.value.toLowerCase();
+      const filterBy = filterParam.value;
+
+      crudTableRows.forEach(row => {
+        let textToCheck = '';
+        switch (filterBy) {
+          case 'title':
+            textToCheck = row.querySelector('.request-title').textContent.toLowerCase();
+            break;
+          case 'category':
+            textToCheck = row.querySelector('.service-category').textContent.toLowerCase();
+            break;
+          case 'date':
+            textToCheck = row.querySelector('.service-date').textContent.toLowerCase();
+            break;
+          case 'status':
+            textToCheck = row.querySelector('.status').textContent.toLowerCase();
+            break;
+          case 'phone':
+            textToCheck = row.querySelector('.phone').textContent.toLowerCase();
+            break;
+          case 'email':
+            textToCheck = row.querySelector('.email').textContent.toLowerCase();
+            break;
+          case 'rating':
+            textToCheck = row.querySelector('.rating').textContent.toLowerCase();
+            break;
+          default:
+            textToCheck = row.textContent.toLowerCase();
+            break;
+        }
+
+        const isMatch = textToCheck.includes(searchText);
+        row.style.display = isMatch ? '' : 'none';
+      });
+    }
+
+    // Bind the filter function to the search button click event
+    searchBtn.addEventListener('click', (e) => {
+      e.preventDefault(); // Prevent the default form submission if using a <button> inside a form
+      filterTable();
+    });
+
+    // Trigger the filter function on each keystroke in the search input
+    searchInput.addEventListener('input', filterTable);
+  });
+</script>
+
+</body>
+</html>

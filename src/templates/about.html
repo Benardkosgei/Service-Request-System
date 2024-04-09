@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Serve Request System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Ensures the footer is at the bottom */
+        html {
+            height: -webkit-fill-available;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+
+            font-family: "Inter", sans-serif;
+            font-optical-sizing: auto;
+            font-weight:<weight>;
+            font-style:normal;
+            font-variation-settings:
+              "slnt" 0;
+	    -webkit-font-smoothing: antialiased;
+        }
+        main {
+            flex: 1;
+        }
+        /* Text-border */
+        .text-outline {
+            -webkit-text-stroke: 1px white;
+        }
+    </style>
+</head>
+<body style="background-image: url('assets/images/about_background.webp'); background-position: center;">
+
+<header class="text-amber-600 p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-3xl"><strong class="text-amber-500">Serve Request System</strong></h1>
+        <nav>
+            <ul class="flex space-x-4 font-semibold text-xl">
+                <li><a href="/" class="hover:text-amber-800">Home</a></li>
+                <li><a href="/about" class="hover:text-amber-800">About</a></li>
+                <li><a href="/services" class="hover:text-amber-800">Services</a></li>
+                <li><a href="/contact" class="hover:text-amber-800">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="fixed top-10 right-10 ml-3 rounded-lg mt-3 border-l-4 p-4 alert z-50 
+                {% if category == 'info' %} bg-blue-100 border-blue-600 text-blue-800 
+                {% elif category == 'error' %} bg-red-100 border-red-600 text-red-800 
+                {% elif category == 'warning' %} bg-yellow-100 border-yellow-600 text-yellow-800 
+                {% elif category == 'success' %} bg-green-100 border-green-600 text-green-800 
+                {% endif %}" role="alert">
+                {{ message }}
+                <div type="button" class="close absolute right-1 top-1 cursor-pointer" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true" class="text-gray-800 font-bold cursor-pointer" onclick="this.parentElement.parentElement.style.display='none';">&times;</span>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<main class="container mx-auto my-8 flex-grow">
+    <!-- About Us -->
+    <section class="text-center p-8">
+        <h2 class="text-5xl font-bold mb-8">About <strong class="text-6xl text-amber-600 text-outline">Serve Request System</strong></h2>
+        <p class="bg-amber-200/50 text-3xl font-medium mb-12"><strong>Serve Request System (SRS)</strong> is dedicated to connecting customers with the best service providers for their home and small business needs. Founded in 2024, our mission is to simplify the process of finding and booking service providers for various tasks, ensuring quality, reliability, and efficiency.</p>
+    </section>
+
+    <!-- Our Vision -->
+    <section class="text-center p-8">
+        <h2 class="text-5xl font-bold mb-8">Our <strong class="text-6xl text-amber-600 text-outline">Vision</strong></h2>
+        <p class="bg-amber-200/50 text-3xl font-medium mb-12">We believe in <strong>building a community</strong> where service providers can <strong>grow</strong> their businesses by reaching more customers, and where customers can find peace of mind knowing their service needs are met by <strong>trusted professionals</strong>. Our platform offers a <strong>wide range of services</strong>, from home repairs to tutoring, all aimed at making the lives of our users easier and <strong>more productive</strong>.</p>
+    </section>
+</main>
+
+<footer class="text-amber-800 text-center ml-24 p-2 hover:text-amber-600">
+    <p>&copy; 2024 Serve Request System. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

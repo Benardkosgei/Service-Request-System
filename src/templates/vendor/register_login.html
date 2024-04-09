@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Register/Login - Serve Request System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Ensures the footer is at the bottom */
+        html {
+            height: -webkit-fill-available;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+
+            font-family: "Inter", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: <weight>;
+            font-style: normal;
+            font-variation-settings:
+              "slnt" 0;
+	    -webkit-font-smoothing: antialiased;
+        }
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        /* Card hover effect */
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        /* Text-border */
+        .text-outline {
+            -webkit-text-stroke: 1px white;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const registerForm = document.getElementById('registerForm');
+            
+            registerForm.addEventListener('submit', function (e) {
+                const password = document.getElementById('vendor-password').value;
+                const confirmPassword = document.getElementById('vendor-confirm-password').value;
+                
+                // Check if passwords match
+                if (password !== confirmPassword) {
+                    e.preventDefault(); // Prevent form submission
+                    alert('Passwords do not match.');
+                }
+            });
+        });
+    </script>
+</head>
+<body style="background-image: url('/assets/images/vendor/register_login_background.webp'); background-size: cover; background-position: center;">
+
+<header class="bg-green-200/40 text-green-700 p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-3xl"><strong class="text-green-700">Serve Request System</strong><p class="text-teal-700/75">Vendor Portal<p></h1>
+        <nav>
+            <ul class="flex space-x-4 font-semibold text-xl">
+                <li><a href="/roles" class="p-2 rounded-lg bg-cyan-200/50 text-green-800 hover:bg-cyan-300/50 mr-8">← Back</a></li> 
+                <li><a href="/" class="p-2 rounded-lg bg-teal-200/50 hover:bg-green-300/75">Home</a></li>
+                <li><a href="/about" class="p-2 rounded-lg bg-teal-200/50 hover:bg-green-300/75">About</a></li>
+                <li><a href="/services" class="p-2 rounded-lg bg-teal-200/50 hover:bg-green-300/75">Services</a></li>
+                <li><a href="/contact" class="p-2 rounded-lg bg-teal-200/50 hover:bg-green-300/75">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="fixed top-10 right-10 ml-3 rounded-lg mt-3 border-l-4 p-4 alert z-50 
+                {% if category == 'info' %} bg-blue-100 border-blue-600 text-blue-800 
+                {% elif category == 'error' %} bg-red-100 border-red-600 text-red-800 
+                {% elif category == 'warning' %} bg-yellow-100 border-yellow-600 text-yellow-800 
+                {% elif category == 'success' %} bg-green-100 border-green-600 text-green-800 
+                {% endif %}" role="alert">
+                {{ message }}
+                <div type="button" class="close absolute right-1 top-1 cursor-pointer" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true" class="text-gray-800 font-bold cursor-pointer" onclick="this.parentElement.parentElement.style.display='none';">&times;</span>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<main class="flex-grow">
+    <div class="max-w-md mx-auto bg-green-200/75 hover:bg-green-200/80 shadow-md rounded-lg px-12 pt-10 pb-10 mt-4 mb-4">
+        <!-- Registration Form -->
+        <div id="registerForm" class="hidden">
+            <h2 class="text-xl font-bold mb-4">Vendor Registration</h2>
+            <form id="registrationForm" action="/vendor/register" method="POST">
+                <!-- Form Fields -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="vendor-name">
+                        Full Name
+                    </label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="vendor-name" name="fullname" type="text" placeholder="Full Name">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="vendor-email">
+                        Email
+                    </label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="vendor-email" name="email" type="email" placeholder="Email">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="vendor-phone">
+                        Phone
+                    </label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="vendor-phone" name="phone" type="tel" placeholder="+1 (123) 456-7890">
+                </div>
+                <div class="mb-4">
+                    <label for="address" class="block text-gray-700 text-sm font-bold mb-2">Address</label>
+                    <textarea id="address" name="address" rows="3" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter address"></textarea>
+                    <input type="hidden" id="latitudeCoordinate" name="latitude" required>
+                    <input type="hidden" id="longitudeCoordinate" name="longitude" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="vendor-password">
+                        Password
+                    </label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="vendor-password" name="password" type="password" placeholder="Password">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="vendor-confim-password">
+                        Confirm Password
+                    </label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="vendor-confirm-password" type="password" placeholder="Confirm Password">
+                </div>
+
+		<div class="flex items-center mb-4">
+		    <input id="link-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" required>
+		    <label for="link-checkbox" class="ms-2 italic text-sm font-medium text-black">I agree to share 20% of my pay with the SRS owner and all the terms &amp; conditions.</label>
+		</div>
+
+                <div class="flex items-center justify-between">
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                        Register
+                    </button>
+                    <a class="inline-block align-baseline ml-4 font-bold text-sm text-blue-500 hover:text-blue-800 cursor-pointer" onclick="toggleForm()">
+                        Already have an account? Log in
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Login Form -->
+        <div id="loginForm">
+            <h2 class="text-3xl text-center text-green-600 font-bold mb-8">Vendor Login</h2>
+            <form action="/vendor/login" method="POST">
+                <!-- Form Fields -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="login-email">
+                        Email
+                    </label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="login-email" name="email" type="email" placeholder="Email">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="login-password">
+                        Password
+                    </label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="login-password" name="password" type="password" placeholder="Password">
+                    <!-- Forgot Password Link -->
+                    <div class="text-right mt-2">
+                        <a href="/forgot" class="text-sm font-bold text-red-500 hover:text-red-700">
+                            Forgot password?
+                        </a>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                        Log in
+                    </button>
+                    <a class="inline-block align-baseline ml-4 font-bold text-sm text-cyan-800 hover:text-blue-600 cursor-pointer" onclick="toggleForm()">
+                        Need an account? Register
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+
+<footer class="bg-green-200/40 text-white text-center p-2 hover:text-green-200">
+    <p>&copy; 2024 Serve Request System. All rights reserved.</p>
+</footer>
+
+<script>
+    function toggleForm() {
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        loginForm.classList.toggle('hidden');
+        registerForm.classList.toggle('hidden');
+    }
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const registerForm = document.getElementById('registrationForm');
+        let geocodeCompleted = false; // Flag to track if geocoding is done
+    
+        registerForm.addEventListener('submit', function (e) {
+            if (!geocodeCompleted) { // If geocoding hasn't been done yet
+                e.preventDefault(); // Prevent form submission
+    
+                const address = document.getElementById('address').value;
+                if (!address.trim()) {
+                    alert('Please enter an address.');
+                    return;
+                }
+    
+                fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`, {
+			headers: { 'Access-Control-Allow-Origin': '*' }
+		})
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data && data.length > 0) {
+                            const lat = data[0].lat;
+                            const lon = data[0].lon;
+    
+                            document.getElementById("latitudeCoordinate").value = lat;
+                            document.getElementById("longitudeCoordinate").value = lon;
+    
+                            geocodeCompleted = true; // Set the flag to true
+                            registerForm.submit(); // Submit the form again
+                        } else {
+                            alert('Address not found. Please try a different address.');
+                        }
+                    }).catch(error => {
+                        console.error('Error:', error);
+                        alert('Failed to process address. Please try again.');
+                    });
+            }
+            // If geocodeCompleted is true, form will submit normally
+        });
+    });
+</script>
+
+</body>
+</html>

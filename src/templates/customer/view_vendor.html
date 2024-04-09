@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" class="min-h-screen flex flex-col">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex-grow" style="background-image: url('/assets/images/customer/customer_dashboard_background.webp'); background-size: cover; background-position: center;">
+    <div class="container mx-auto p-6 flex flex-col items-center justify-center min-h-screen">
+        <div class="max-w-sm rounded-lg overflow-hidden shadow-lg bg-blue-100 bordered-black">
+            <div class="px-10 py-8">
+                <div class="text-center font-bold text-xl mb-2">{{vendor['name']}}</div>
+            </div>
+
+            <!-- Back Button -->
+            <div class="ml-2 mb-4">
+                <button id="back-btn" onclick="window.history.back()" class="text-gray-600 bg-gray-100 text-sm font-bold px-4 py-2 rounded shadow hover:text-blue-500 transition-colors duration-300">
+                    ← Go Back
+                </button>
+            </div>
+
+            <p class="text-md text-purple-500 font-semibold ml-2 mb-3">Address:</p>
+            <div class="contact-details mx-6 my-4 mb-4 gap-2">
+                <p class="flex justify-between font-bold items-center gap-4">
+			{{ vendor['address'] }}
+                </p>
+            </div>
+
+            <div class="mx-6 my-4">
+                <p class="text-md text-purple-500 font-semibold mb-3">Location Map:</p>
+                <iframe
+                    width="100%"
+                    height="300"
+                    frameborder="0"
+                    scrolling="no"
+                    marginheight="0"
+                    marginwidth="0"
+                    src="https://www.openstreetmap.org/export/embed.html?bbox={{ vendor['longitude']|float - 0.01 }}%2C{{ vendor['latitude']|float - 0.01 }}%2C{{ vendor['longitude']|float + 0.01 }}%2C{{ vendor['latitude']|float + 0.01 }}&amp;layer=mapnik&marker={{ vendor['latitude'] }}%2C{{ vendor['longitude'] }}"
+                    style="border: 1px solid black">
+                </iframe>
+                <br/>
+                <small>
+                    <a href="https://www.openstreetmap.org/?mlat={{ vendor['latitude'] }}&amp;mlon={{ vendor['longitude'] }}#map=15/{{ vendor['latitude'] }}/{{ vendor['longitude'] }}">
+                        View Larger Map
+                    </a>
+                </small>
+            </div>
+
+            <p class="text-md text-purple-500 font-semibold ml-2 mb-3">Contact:</p>
+            <div class="contact-details mx-6 my-4 mb-4 gap-2">
+                <p class="flex justify-between font-bold items-center gap-4">
+                    Phone
+                    <a href="tel:{{ vendor['phone'].replace('(', '').replace(')', '').replace(' ', '').replace('-', '') }}" class="text-red-500 hover:text-red-700">{{ vendor['phone'] }}</a>
+                </p>
+                <p class="flex justify-between font-bold items-center gap-4">
+                    Mail
+                    <a href="mailto:{{ vendor['email'] }}" class="text-blue-500 hover:text-blue-700">{{ vendor['email'] }}</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-blue-500 text-white text-center p-4 mt-auto">
+        <p>&copy; 2024 Serve Request System. All rights reserved.</p>
+    </footer>
+</body>
+</html>

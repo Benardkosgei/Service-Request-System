@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" class="min-h-screen bg-gray-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Payment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+
+            font-family: "Roboto", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: <weight>;
+            font-style: normal;
+            font-variation-settings:
+              "slnt" 0;
+	    -webkit-font-smoothing: antialiased;
+        }
+    </style>
+</head>
+<body style="background-image: url('/assets/images/customer/pay_vendor_background.webp'); background-size: cover; background-position: center;">
+    <div class="container mx-auto my-48 p-4" style="flex: 1;">
+        <div class="bg-green-200/90 hover:bg-green-200 max-w-md mx-auto rounded-lg shadow-lg overflow-hidden p-8">
+            <form id="paymentForm" action="/customer/request/{{request['_id']}}/pay/{{vendor['_id']}}" method="POST">
+
+                <h1 class="text-2xl font-black text-center mt-2 mb-8">Make a Payment</h1>
+
+                <!-- Display Vendor's Payment Acceptance like PayPal/Venmo -->
+                <div class="mb-4">
+                    <label for="vendor" class="block text-sm font-semibold mb-2">Select Payment Method</label>
+                    <select id="vendor" name="payment_gateway" class="w-full border bg-white rounded px-3 py-2 outline-none">
+                        <option value="card">Credit/Debit Card</option>
+                        <option value="paypal">PayPal</option>
+                        <option value="venmo" selected>Venmo</option>
+                    </select>
+                </div>
+
+                <!-- Payment Amount -->
+                <div class="mb-4">
+                    <label for="amount" class="block text-sm font-semibold mb-2">Amount</label>
+                    <input type="text" id="amount" name="amount" value="{{request['amount']}}" class="w-full border bg-white rounded px-3 py-2 outline-none" placeholder="$0.00"required>
+                </div>
+
+                <!-- Vendor's Exchange Protocol (e.g., Email, Reference) -->
+                <div class="mb-4">
+                    <label for="reference" class="block text-sm font-semibold mb-2">Reference/Vendor Email</label>
+                    <input type="email" id="reference" class="w-full border bg-white rounded px-3 py-2 outline-none" name="email" value="{{vendor['email']}}" placeholder="e.g., vendor@example.com" required>
+                </div>
+
+                <button type="submit" class="w-full bg-blue-500 text-white rounded py-2 px-4 hover:bg-blue-600">
+                    Pay Now
+                </button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

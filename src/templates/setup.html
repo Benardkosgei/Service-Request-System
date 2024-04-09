@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup - Service Request System</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        html {
+            height: -webkit-fill-available;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+        }
+        main {
+            flex: 1;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+<header class="bg-blue-500 text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-xl">Customer Dashboard</h1>
+        <nav>
+            <ul class="flex space-x-4">
+                <li><a href="/customer/dashboard" class="font-bold hover:text-red-400">Dashboard</a></li>
+                <li><a href="/customer/history" class="text-yellow-400 font-semibold hover:text-white">View History</a></li>
+                <li><a href="/logout" class="font-bold hover:text-red-400">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main class="container mx-auto px-4 my-8">
+    <div class="bg-white p-6 rounded-md shadow-md">
+        <h1 class="text-2xl font-semibold mb-4">App Settings</h1>
+
+        <div class="mb-4">
+            <label class="block text-gray-700">Sound Preferences:</label>
+            <select id="soundPreferences" class="form-select">
+                <option value="on">On</option>
+                <option value="off">Off</option>
+            </select>
+        </div>
+
+        <div class="mb-4">
+            <label class="block text-gray-700">Communication Preferences:</label>
+            <select id="communicationPreferences" class="form-select">
+                <option value="email">Email</option>
+                <option value="sms">SMS</option>
+            </select>
+        </div>
+
+        <div class="mb-4">
+            <label class="block text-gray-700">Points Usage:</label>
+            <div class="flex items-center">
+                <input type="checkbox" id="pointsUsage" class="form-checkbox">
+                <span class="ml-2">Use Points Towards Services</span>
+            </div>
+        </div>
+
+        <!-- Additional setup features -->
+        <div class="mb-4">
+            <label class="block text-gray-700">Notification Preferences:</label>
+            <div>
+                <input type="checkbox" id="emailNotifications" class="form-checkbox">
+                <label for="emailNotifications" class="ml-2">Email Notifications</label>
+            </div>
+            <div>
+                <input type="checkbox" id="smsNotifications" class="form-checkbox">
+                <label for="smsNotifications" class="ml-2">SMS Notifications</label>
+            </div>
+        </div>
+
+        <!-- Add a button to save settings -->
+        <button onclick="saveSettings()" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700">Save Settings</button>
+    </div>
+</main>
+
+<footer class="bg-blue-500 text-white text-center p-4 mt-8">
+    <p>&copy; 2024 Service Request System. All rights reserved.</p>
+</footer>
+
+<script>
+    // You can add JavaScript logic here to handle saving settings
+    function saveSettings() {
+        // Fetch values from the HTML elements and perform necessary actions
+        var soundPreferences = document.getElementById('soundPreferences').value;
+        var communicationPreferences = document.getElementById('communicationPreferences').value;
+        var pointsUsage = document.getElementById('pointsUsage').checked;
+
+        // Additional features
+        var emailNotifications = document.getElementById('emailNotifications').checked;
+        var smsNotifications = document.getElementById('smsNotifications').checked;
+
+        // Perform validation
+        if (!soundPreferences) {
+            alert('Sound Preferences are required. Please select an option before saving settings.');
+            return; // Stop further processing if validation fails
+        }
+
+        // Perform validation for notification preferences
+        if (!emailNotifications && !smsNotifications) {
+            alert('Notification Preferences are required. Please select at least one option before saving settings.');
+            return; // Stop further processing if validation fails
+        }
+
+        // Perform actions with the settings, e.g., send them to a server or store locally
+        // For now, let's just log them to the console
+        console.log("Sound Preferences:", soundPreferences);
+        console.log("Communication Preferences:", communicationPreferences);
+        console.log("Points Usage:", pointsUsage);
+        console.log("Email Notifications:", emailNotifications);
+        console.log("SMS Notifications:", smsNotifications);
+
+        alert('Settings saved!');
+    }
+</script>
+
+
+</body>
+</html>

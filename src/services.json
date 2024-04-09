@@ -1,0 +1,11 @@
+{
+    "Appliances"               : ["Expert repair and maintenance for your home appliances", "blender-phone"],
+    "Electrical"               : ["Safe and reliable electrical repair and installation services", "plug"],
+    "Plumbing"                 : ["Comprehensive plumbing services for leaks, blockages, and installations", "toilet"],
+    "Home Cleaning"            : ["Professional cleaning services for a sparkling clean home", "broom"],
+    "Tutoring"                 : ["Personalized tutoring services for all ages and subjects", "chalkboard-user"],
+    "Packaging and Moving"     : ["Stress-free moving services with professional packing and transportation", "truck-arrow-right"],
+    "Computer Repair"          : ["Fast and efficient repair services for your computers and devices", "laptop-medical"],
+    "Home Repair and Painting" : ["Quality home repair and painting services to refresh your space", "house-circle-exclamation"],
+    "Pest Control"             : ["Effective pest control solutions for a pest-free environment", "bug-slash"]
+}

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forgot Password - Serve Request System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Ensures the footer is at the bottom */
+        html {
+            height: -webkit-fill-available;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+
+            font-family: "Inter", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: <weight>;
+            font-style: normal;
+            font-variation-settings:
+              "slnt" 0;
+	    -webkit-font-smoothing: antialiased;
+        }
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        /* Card hover effect */
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        /* Text-border */
+        .text-outline {
+            -webkit-text-stroke: 1px white;
+        }
+    </style>
+</head>
+<body class="bg-cyan-200">
+
+<header class="text-cyan-600 p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-3xl"><strong class="text-blue-800">Serve Request System</strong></h1>
+        <nav>
+            <ul class="flex space-x-4 font-semibold text-xl">
+                <li><a href="/" class="hover:text-cyan-800">Home</a></li>
+                <li><a href="/about" class="hover:text-cyan-800">About</a></li>
+                <li><a href="/services" class="hover:text-cyan-800">Services</a></li>
+                <li><a href="/contact" class="hover:text-cyan-800">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="fixed top-10 right-10 ml-3 rounded-lg mt-3 border-l-4 p-4 alert z-50 
+                {% if category == 'info' %} bg-blue-100 border-blue-600 text-blue-800 
+                {% elif category == 'error' %} bg-red-100 border-red-600 text-red-800 
+                {% elif category == 'warning' %} bg-yellow-100 border-yellow-600 text-yellow-800 
+                {% elif category == 'success' %} bg-green-100 border-green-600 text-green-800 
+                {% endif %}" role="alert">
+                {{ message }}
+                <div type="button" class="close absolute right-1 top-1 cursor-pointer" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true" class="text-gray-800 font-bold cursor-pointer" onclick="this.parentElement.parentElement.style.display='none';">&times;</span>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<main class="max-w-md container mx-auto my-8 flex-grow">
+    <section class="bg-blue-200/50 rounded-2xl text-center p-8">
+        <h2 class="text-5xl font-bold mb-8">Forgot <strong class="text-6xl text-rose-700 text-outline">Password</strong>?</h2>
+
+        <h2 class="text-center text-2xl font-semibold text-teal-800 mb-6">Reset Your Password</h2>
+        <p class="mb-4 text-center">Enter your email address below, and we'll send you a link to reset your password.</p>
+
+        <!-- Back Button -->
+        <div class="mb-8">
+            <button id="back-btn" onclick="window.history.back()" class="bg-cyan-600 text-blue-200 text-sm font-bold px-4 py-2 rounded-xl shadow hover:bg-cyan-800 transition-colors duration-300">
+                ← Back
+            </button>
+        </div>
+
+        <form action="/forgot" method="POST">
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
+                    Email
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" name="email" type="email" placeholder="test@example.com" required>
+            </div>
+            <div class="flex items-center justify-between">
+                <button class="bg-cyan-600 hover:bg-cyan-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                    Reset
+                </button>
+            </div>
+        </form>
+    </section>
+</main>
+
+<footer class="text-cyan-800 text-center p-2 hover:text-cyan-600">
+    <p>&copy; 2024 Serve Request System. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

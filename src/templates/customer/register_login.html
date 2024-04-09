@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Register/Login - Serve Request System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Ensures the footer is at the bottom */
+        html {
+            height: -webkit-fill-available;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+
+            font-family: "Inter", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: <weight>;
+            font-style: normal;
+            font-variation-settings:
+              "slnt" 0;
+	    -webkit-font-smoothing: antialiased;
+        }
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        /* Card hover effect */
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        /* Text-border */
+        .text-outline {
+            -webkit-text-stroke: 1px white;
+        }
+    </style>
+    <script>
+        // Simple script to toggle between login and registration forms
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.querySelector('#loginForm');
+            const registerForm = document.querySelector('#registerForm');
+
+            document.querySelector('#showRegister').addEventListener('click', () => {
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+            });
+
+            document.querySelector('#showLogin').addEventListener('click', () => {
+                registerForm.classList.add('hidden');
+                loginForm.classList.remove('hidden');
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const registerForm = document.getElementById('registerForm');
+            
+            registerForm.addEventListener('submit', function (e) {
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirm_password').value;
+                
+                // Check if passwords match
+                if (password !== confirmPassword) {
+                    e.preventDefault(); // Prevent form submission
+                    alert('Passwords do not match.');
+                }
+            });
+        });
+    </script>
+</head>
+
+<body style="background-image: url('/assets/images/customer/register_login_background.webp'); background-size: cover; background-position: center;">
+
+<header class="bg-sky-200/40 text-sky-700 p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-3xl"><strong class="text-neutral-800">Serve Request System</strong></h1>
+        <nav>
+            <ul class="flex space-x-4 font-semibold text-xl">
+                <li><a href="/roles" class="p-2 rounded-lg bg-sky-200/50 text-sky-800 hover:bg-cyan-300/50 mr-8">← Back</a></li> 
+                <li><a href="/" class="p-2 rounded-lg bg-sky-200/50 hover:bg-sky-300/75">Home</a></li>
+                <li><a href="/about" class="p-2 rounded-lg bg-sky-200/50 hover:bg-sky-300/75">About</a></li>
+                <li><a href="/services" class="p-2 rounded-lg bg-sky-200/50 hover:bg-sky-300/75">Services</a></li>
+                <li><a href="/contact" class="p-2 rounded-lg bg-sky-200/50 hover:bg-sky-300/75">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="fixed top-10 right-10 ml-3 rounded-lg mt-3 border-l-4 p-4 alert z-50 
+                {% if category == 'info' %} bg-blue-100 border-blue-600 text-blue-800 
+                {% elif category == 'error' %} bg-red-100 border-red-600 text-red-800 
+                {% elif category == 'warning' %} bg-yellow-100 border-yellow-600 text-yellow-800 
+                {% elif category == 'success' %} bg-green-100 border-green-600 text-green-800 
+                {% endif %}" role="alert">
+                {{ message }}
+                <div type="button" class="close absolute right-1 top-1 cursor-pointer" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true" class="text-gray-800 font-bold cursor-pointer" onclick="this.parentElement.parentElement.style.display='none';">&times;</span>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<main class="flex-grow">
+
+    <div class="max-w-md mx-auto bg-white hover:bg-white shadow-md rounded-lg px-12 pt-10 pb-10 mt-4 mb-4">
+
+        <!-- Registration Form -->
+        <div id="registerForm" class="hidden">
+            <h2 class="text-center text-3xl font-semibold text-sky-800 mb-8">Customer Register</h2>
+            <form action="/customer/register" method="POST">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+                        Full Name
+                    </label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="fullname" name="fullname" type="text" placeholder="Full Name" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
+                        Email
+                    </label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" name="email" type="email" placeholder="Email" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="phone">
+                        Phone
+                    </label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="phone" name="phone" type="tel" placeholder="+1 (123) 456-7890" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+                        Password
+                    </label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password" name="password" type="password" placeholder="Password" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="confirm_password">
+                        Confirm Password
+                    </label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="confirm_password" type="password" placeholder="Confirm Password" required>
+                </div>
+                <div class="flex items-center justify-between">
+                    <button class="bg-sky-600 hover:bg-sky-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                        Register
+                    </button>
+                    <a id="showLogin" class="inline-block align-baseline font-bold text-sm text-sky-800/75 hover:text-sky-900 cursor-pointer ml-4">
+                        Already have an account?
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Login Form -->
+        <div id="loginForm">
+            <h2 class="text-center text-3xl font-semibold text-sky-800 mb-8">Customer Login</h2>
+            <form action="/customer/login" method="POST">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
+                        Email
+                    </label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="login-email" name="email" type="email" placeholder="Email" required>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+                        Password
+                    </label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="login-password" name="password" type="password" placeholder="Password" required>
+                    <!-- Forgot Password Link -->
+                    <div class="text-right mt-2">
+                        <a href="/forgot" class="text-sm font-bold text-neutral-800 hover:text-rose-600">
+                            Forgot password?
+                        </a>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <button class="bg-sky-600 hover:bg-sky-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                        Login
+                    </button>
+                    <a id="showRegister" class="inline-block align-baseline font-bold text-sm text-sky-900 hover:text-black cursor-pointer">
+                        Need an account? Register
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</main>
+
+
+<footer class="bg-sky-200/40 text-sky-600 text-center p-2 hover:text-sky-800">
+    <p>&copy; 2024 Serve Request System. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

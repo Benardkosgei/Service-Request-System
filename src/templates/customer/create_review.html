@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" class="flex flex-col min-h-screen">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Review - Service Request System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Ensures footer is always at the bottom */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body class="flex flex-col"  style="background-image: url('/assets/images/customer/customer_dashboard_background.webp'); background-size: cover; background-position: center;">
+
+<header class="bg-blue-500/75 text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-xl">Create Review</h1>
+        
+        <nav>
+            <ul class="flex space-x-4">
+                <li><a href="/customer/profile" class="font-bold hover:text-red-400">My Profile</a></li>
+                <li><a href="/customer/dashboard" class="font-bold hover:text-red-400">Dashboard</a></li>
+                <li><a href="/customer/history" class="text-yellow-400 font-semibold hover:text-white">View History</a></li>
+                <li><a href="/logout" class="font-bold hover:text-red-400">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main class="flex-grow container mx-auto p-4">
+    <!-- Review Form -->
+<div class="bg-white shadow-md rounded p-6">
+    <form action="/customer/review/create" method="POST">
+        <h2 class="text-xl font-semibold mb-4">Write a Review</h2>
+        <div class="mb-4">
+            <label for="title" class="block text-gray-700 font-bold mb-2">Title</label>
+            <input type="text" id="title" name="title" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter review title" required>
+        </div>
+        <div class="mb-4">
+            <label for="description" class="block text-gray-700 font-bold mb-2">Description</label>
+            <textarea id="description" name="description" rows="5" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter review description" required></textarea>
+        </div>
+        <!-- Use a select dropdown for categories -->
+        <div class="mb-4">
+            <label for="category" class="block text-gray-700 font-bold mb-2">Category</label>
+            <select id="category" name="category" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                <!-- Iterate over service categories and populate options -->
+                {% for category in categories %}
+                    <option value="{{ category }}">{{ category }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Submit Review</button>
+    </form>
+</div>
+
+
+</main>
+
+<footer class="bg-blue-500/75 text-white hover:text-gray-200 text-center p-4 mt-auto">
+    <p>&copy; 2024 Serve Request System. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" class="flex flex-col min-h-screen">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard - Service Request System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Ensures footer is always at the bottom */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        main {
+            flex: 1;
+        }
+        /* Style for the search icon inside the search box */
+        .search-icon {
+            position: absolute;
+            inset-y: 0;
+            right: 0;
+            padding: 16px;
+        }
+    </style>
+</head>
+<body class="flex flex-col" style="background-image: url('/assets/images/customer/customer_dashboard_background.webp'); background-size: cover; background-position: center;">
+
+<header class="bg-blue-500/75 text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-xl">Customer Dashboard</h1>
+        
+        <nav>
+            <ul class="flex space-x-4">
+                <li><a href="/customer/profile" class="font-bold hover:text-red-400">My Profile</a></li>
+                <li><a href="/customer/reviews" class="font-bold hover:text-red-400">Reviews</a></li>
+                <li><a href="/customer/history" class="text-yellow-400 font-semibold hover:text-white">View History</a></li>
+                <li><a href="/logout" class="font-bold hover:text-red-400">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="fixed top-10 right-10 ml-3 rounded-lg mt-3 border-l-4 p-4 alert z-50 
+                {% if category == 'info' %} bg-blue-100 border-blue-600 text-blue-800 
+                {% elif category == 'error' %} bg-red-100 border-red-600 text-red-800 
+                {% elif category == 'warning' %} bg-yellow-100 border-yellow-600 text-yellow-800 
+                {% elif category == 'success' %} bg-green-100 border-green-600 text-green-800 
+                {% endif %}" role="alert">
+                {{ message }}
+                <div type="button" class="close absolute right-1 top-1 cursor-pointer" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true" class="text-gray-800 font-bold cursor-pointer" onclick="this.parentElement.parentElement.style.display='none';">&times;</span>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<main class="flex-grow container mx-auto p-4">
+
+    <!-- Search Bar with Filters -->
+    <div class="flex gap-4 mb-4">
+        <select id="filter-parameter" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <option value="all">All Parameters</option>
+            <option value="title">Request Title</option>
+            <option value="category">Service Categories</option>
+            <option value="date">Service Date</option>
+            <option value="description">Description</option>
+            <option value="status">Status</option>
+        </select>
+        <div class="relative flex-grow">
+            <input type="text" id="search-input" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Search requests...">
+        </div>
+        <button id="search-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Search
+        </button>
+    </div>
+
+    <!-- Place New Service Request Button -->
+    <a href="/customer/request/new" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mb-4">
+        Place New Service Request
+    </a>
+
+    <!-- CRUD Table -->
+    <div class="text-white shadow-md rounded my-6">
+        <table id="crud-table" class="min-w-full border-collapse">
+            <thead class="bg-sky-800 font-black">
+                <tr>
+                    <th class="border-b py-2 px-4 text-left">Request Title</th>
+                    <th class="border-b py-2 px-4 text-left">Service Category</th>
+                    <th class="border-b py-2 px-4 text-left">Service Date</th>
+                    <th class="border-b py-2 px-4 text-left">Description</th>
+                    <th class="border-b py-2 px-4 text-left">Status</th>
+                    <th class="border-b py-2 px-4 text-left">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            {% for request in requests %}
+                {% if request['status'].lower() != 'paid' %}
+                <tr class="bg-sky-800/75 font-semibold">
+                    <td class="border-b py-2 px-4 request-title">{{ request['title'] }}</td>
+                    <td class="border-b py-2 px-4 service-category">{{ request['category'] }}</td>
+                    <td class="border-b py-2 px-4 service-date"><strong class="text-cyan-100">{{ dt.strptime(request['date'], "%Y-%m-%d").strftime("%d %B, %Y") }}</strong></td>
+                    <td class="border-b py-2 px-4 description">{{ request['description'] }}</td>
+                    <td class="border-b py-2 px-4 status">{{ request['status'] }}</td>
+                    <td class="border-b py-2 px-4 gap-2 actions">
+                        {% if request['status'].lower() == 'open' %}
+                        <a href="/customer/request/edit/{{ request['_id'] }}" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-3 rounded text-sm">Edit</a>
+                        <a href="/customer/request/delete/{{ request['_id'] }}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-sm">Delete</a>
+                        <a href="/customer/request/bids/{{ request['_id'] }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-sm">View Bids</a>
+                        {% elif request['status'].lower() == 'closed' %}
+                        <a href="/customer/request/{{ request['_id'] }}/rate/{{ request['vendor_id'] }}" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-3 rounded text-sm">Rate</a>
+                        {% elif request['status'].lower() == 'rated' %}
+                        <a href="/customer/request/{{ request['_id'] }}/pay/{{ request['vendor_id'] }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-3 rounded text-sm">Pay</a>
+                        {% else %}
+                        <a href="/contact" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-sm">Report</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<footer class="bg-blue-500/75 text-white hover:text-gray-200 text-center p-4 mt-auto">
+    <p>&copy; 2024 Serve Request System. All rights reserved.</p>
+</footer>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('search-input');
+    const filterParam = document.getElementById('filter-parameter');
+    const searchBtn = document.getElementById('search-btn');
+    const crudTableRows = document.querySelectorAll('#crud-table tbody tr');
+
+    function filterTable() {
+      const searchText = searchInput.value.toLowerCase();
+      const filterBy = filterParam.value;
+
+      crudTableRows.forEach(row => {
+        let textToCheck = '';
+        switch (filterBy) {
+          case 'title':
+            textToCheck = row.querySelector('.request-title').textContent.toLowerCase();
+            break;
+          case 'category':
+            textToCheck = row.querySelector('.service-category').textContent.toLowerCase();
+            break;
+          case 'date':
+            textToCheck = row.querySelector('.service-date').textContent.toLowerCase();
+            break;
+          case 'description':
+            textToCheck = row.querySelector('.description').textContent.toLowerCase();
+            break;
+          case 'status':
+            textToCheck = row.querySelector('.status').textContent.toLowerCase();
+            break;
+          default:
+            textToCheck = row.textContent.toLowerCase();
+            break;
+        }
+
+        const isMatch = textToCheck.includes(searchText);
+        row.style.display = isMatch ? '' : 'none';
+      });
+    }
+
+    // Bind the filter function to the search button click event
+    searchBtn.addEventListener('click', (e) => {
+      e.preventDefault(); // Prevent the default form submission if using a <button> inside a form
+      filterTable();
+    });
+
+    // Trigger the filter function on each keystroke in the search input
+    searchInput.addEventListener('input', filterTable);
+  });
+</script>
+
+</body>
+</html>

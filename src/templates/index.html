@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Request System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Ensures the footer is at the bottom */
+        html {
+            height: -webkit-fill-available;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+
+            font-family: "Inter", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: <weight>;
+            font-style: normal;
+            font-variation-settings:
+              "slnt" 0;
+	    -webkit-font-smoothing: antialiased;
+        }
+        main {
+            flex: 1;
+        }
+        /* Card hover effect */
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        /* Text-border */
+        .text-outline {
+            -webkit-text-stroke: 1px white;
+        }
+
+        .onHover{
+            background-color: brown !important;
+        }
+    </style>
+</head>
+<body style="background-image: url('assets/images/background.webp'); background-position: center;">
+
+<header class="text-neutral-500 p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-3xl"><strong class="text-neutral-800">Service Request System</strong></h1>
+        <nav>
+            <ul class="flex space-x-4 font-semibold text-xl">
+                <li><a href="/" class="hover:text-neutral-800 text-yellow-700/75">Home</a></li>
+                <li><a href="/about" class="hover:text-neutral-800 text-yellow-700/75">About</a></li>
+                <li><a href="/services" class="hover:text-neutral-800 text-yellow-700/75">Services</a></li>
+                <li><a href="/contact" class="hover:text-neutral-800 text-yellow-700/75">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="fixed top-10 right-10 ml-3 rounded-lg mt-3 border-l-4 p-4 alert z-50 
+                {% if category == 'info' %} bg-blue-100 border-blue-600 text-blue-800 
+                {% elif category == 'error' %} bg-red-100 border-red-600 text-red-800 
+                {% elif category == 'warning' %} bg-yellow-100 border-yellow-600 text-yellow-800 
+                {% elif category == 'success' %} bg-green-100 border-green-600 text-green-800 
+                {% endif %}" role="alert">
+                {{ message }}
+                <div type="button" class="close absolute right-1 top-1 cursor-pointer" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true" class="text-gray-800 font-bold cursor-pointer" onclick="this.parentElement.parentElement.style.display='none';">&times;</span>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<main style="background-image: url('assets/images/background.webp');" class="container mx-auto my-8 flex-grow">
+    <section class="bg-neutral-200/50 rounded-2xl text-center p-8">
+        <h2 class="text-5xl font-bold mb-8">Welcome to <strong class="text-6xl text-yellow-700/75 text-outline">Service Request System</strong></h2>
+        <p class="text-xl font-bold mb-12">Connecting customers with top-notch service providers for their home and small business needs.</p>
+        <a href="/roles" class="bg-neutral-500 hover:bg-neutral-700 text-white text-xl font-bold py-3 px-4 rounded-lg onHover">Get Started</a>
+    </section>
+
+    <section class="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+
+	{% for category, info in service_categories.items() %}
+        <div class="p-4 bg-neutral-500/90 rounded-lg shadow card transition-all duration-300 hover:bg-neutral-600">
+            <i class="fa-solid fa-{{ info[1] }} fa-2x" aria-hidden="true"></i>
+            <h3 class="inline-block text-xl text-neutral-1200 bg-neutral-300/75 px-1 rounded-xl font-bold ml-4 mb-2">{{ category }}</h3>
+            <p class="bg-neutral-300/75 rounded-lg shadow-lg p-2 hover:bg-neutral-400">{{ info[0] }}</p>
+        </div>
+        {% endfor %}
+
+
+
+    </section>
+    
+         <!-- Display Reviews -->
+         <div style="background-image: url('assets/images/background.webp');" class="bg-white shadow-md rounded mt-8 p-6">
+            <div class="flex items-center justify-between">
+                <h2 class="text-xl font-semibold mb-4 mx-auto">See what happy customers are saying about our Services </h2>
+            </div>
+            <div class="container">
+                <div class="gap-5 columns-3 ">
+                <!-- Loop through reviews and display them here -->
+                {% for review in reviews %}
+                    <div class="card border-b py-4 p-3 shadow-lg">
+                        <h3 class="text-lg font-semibold">{{ review.title }}</h3>
+                        <p class="text-gray-600">{{ review.description }}</p>
+                        <b class="text-gray-600">{{ review.category }}</b>
+                    </div>
+                
+                {% endfor %}
+                <!-- If no reviews available -->
+                {% if not reviews %}
+                    <p>No reviews available.</p>
+                {% endif %}
+            </div>
+            </div>
+        </div>
+   
+</main>
+
+<footer class="text-neutral-800 text-center p-2 hover:text-neutral-600">
+    <p>&copy; 2024 Service Request System. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
